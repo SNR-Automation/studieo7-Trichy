@@ -251,13 +251,42 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (valid) {
+        // Construct WhatsApp message
+        const whatsappNumber = '917891011387';
+        let message = '';
+
+        if (form.id === 'bookingForm') {
+          const name = form.querySelector('#book-name').value;
+          const phone = form.querySelector('#book-phone').value;
+          const service = form.querySelector('#book-service').options[form.querySelector('#book-service').selectedIndex].text;
+          const date = form.querySelector('#book-date').value;
+          const time = form.querySelector('#book-time').value;
+          const weddingDate = form.querySelector('#book-wedding-date').value;
+          const notes = form.querySelector('#book-notes').value;
+
+          message = `New Appointment Booking from Website:\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Date:* ${date}\n*Time:* ${time}`;
+          if (weddingDate) message += `\n*Wedding Date:* ${weddingDate}`;
+          if (notes) message += `\n*Notes:* ${notes}`;
+        } else {
+          const name = form.querySelector('#contact-name').value;
+          const phone = form.querySelector('#contact-phone').value;
+          const subject = form.querySelector('#contact-subject').options[form.querySelector('#contact-subject').selectedIndex].text;
+          const userMsg = form.querySelector('#contact-message').value;
+
+          message = `New Contact Inquiry from Website:\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Subject:* ${subject}\n*Message:* ${userMsg}`;
+        }
+
         // Show success modal
         const modal = document.querySelector('.success-modal');
         if (modal) {
           modal.classList.add('active');
-          setTimeout(() => { modal.classList.remove('active'); }, 4000);
+          setTimeout(() => {
+            modal.classList.remove('active');
+            // Redirect to WhatsApp
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            form.reset();
+          }, 2000);
         }
-        form.reset();
       }
     });
 
